@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TagFinderApp"
+rootProject.name = "TagInfoFinder"
 include(":app")
  
