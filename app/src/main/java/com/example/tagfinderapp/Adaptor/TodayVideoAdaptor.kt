@@ -13,7 +13,11 @@ import com.example.tagfinderapp.Model.TodayVideo
 import com.example.tagfinderapp.R
 import com.squareup.picasso.Picasso
 
-class TodayVideoAdaptor(val context: Context, var todayVideo: TodayVideo,private val onItemClick: (String) -> Unit) :
+class TodayVideoAdaptor(
+    val context: Context,
+    var todayVideo: TodayVideo,
+    private val onItemClick: (String) -> Unit
+) :
     RecyclerView.Adapter<TodayVideoAdaptor.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -37,9 +41,11 @@ class TodayVideoAdaptor(val context: Context, var todayVideo: TodayVideo,private
             holder.itemView.translationX = 0f // Reset animation for other items
         }
 
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
             onItemClick(list.id)
         }
+
+
     }
 
     override fun getItemCount(): Int {

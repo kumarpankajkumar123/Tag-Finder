@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tagfinderapp.ViewModal.TagsViewModel
 import com.example.tagfinderapp.databinding.ActivitySplashScreenBinding
@@ -35,7 +36,7 @@ class SplashScreen : AppCompatActivity() {
         animatorSet.playTogether(imageAnimator, textAnimator)
         animatorSet.start()
 
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             val mainIntent: Intent = Intent(
                 this,
                 MainActivity::class.java
@@ -43,6 +44,5 @@ class SplashScreen : AppCompatActivity() {
             this@SplashScreen.startActivity(mainIntent)
             this@SplashScreen.finish()
         }, 2000)
-
     }
 }

@@ -12,6 +12,11 @@
     <color name="white3">#FFFFF0</color>
     <color name="white4">#F0F8FF</color>
     <color name="white5">#F8F8FF</color>
+    <color name="gray1">#808080</color>
+    <color name="gray4">#737E82 </color>
+    <color name="gray3">#9EA8AC </color>
+    <color name="gray5">#33000000  </color>
+    <color name="gray2">#5DCAC8CA</color>
     <color name="selected_tab_color">#ff0000</color>
     <color name="unselected_tab_color">#000000</color>
 </resources>

@@ -7,114 +7,159 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.VideoDetail"
     android:background="@color/white4">
-    <EditText
-        android:id="@+id/search_edit_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="10dp"
-        android:drawablePadding="10dp"
-        android:textColorHint="@color/black"
-        android:textColor="@color/black"
-        android:textCursorDrawable="@drawable/cursor"
-        android:drawableLeft="@drawable/icon_search"
-        android:background="@drawable/searchdrawable"
-        android:elevation="5dp"
-        android:hint="enter video url"
-        android:inputType="text"
-        android:padding="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/searchbtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/searchbtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:backgroundTint="@color/white2"
-        android:fontFamily="@font/comfortaa_medium"
-        android:text="search"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        app:cornerRadius="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/search_edit_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/search_edit_text" />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/watchTutorial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/color_selector"
-        android:fontFamily="@font/roboto_medium"
-        android:padding="10dp"
-        android:text="How To Use App"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        app:cornerRadius="10dp"
-        app:layout_constraintStart_toStartOf="@+id/search_edit_text"
-        app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/gotoYoutube"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/color_selector"
-        android:fontFamily="@font/cantora_one"
-        android:padding="10dp"
-        android:text="GoTo Youtube"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        app:cornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/searchbtn"
-        app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
-    <TextView
-        android:id="@+id/demo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:padding="5dp"
-        android:fontFamily="@font/bangers"
-        android:lineHeight="20sp"
-        android:letterSpacing="0.1"
-        android:text="See All the Trending \nVideos"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/hr_recycler"
-        app:layout_constraintStart_toStartOf="parent" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/hr_recycler"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="70dp"
-        android:clipToPadding="false"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/insideVideoFramlayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <ProgressBar
-        android:id="@+id/progressbar"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:progressTint="@color/black"
-        android:progressBackgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/_20dp"
+        android:paddingHorizontal="@dimen/_10dp"
+        android:paddingVertical="@dimen/_5dp"
+        android:layout_marginHorizontal="@dimen/_20dp"
+        android:background="@drawable/searchdrawable"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:textColorHint="@color/gray1"
+            android:textColor="@color/selected_color"
+            android:textCursorDrawable="@drawable/cursor"
+            android:drawableLeft="@drawable/icon_search"
+            android:elevation="5dp"
+            android:layout_marginEnd="10dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:background="@android:color/transparent"
+            android:hint="@string/enter_video_url"
+            android:inputType="text"
+            android:fontFamily="@font/lato_regular"
+            android:textFontWeight="400"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/searchbtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/searchbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/search_drawer"
+            android:fontFamily="@font/comfortaa_medium"
+            android:text="@string/search"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:elevation="@dimen/_3dp"
+            android:textAllCaps="false"
+            android:paddingVertical="3dp"
+            android:paddingHorizontal="8dp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@+id/search_edit_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/middle_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/top_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/watchTutorial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:background="@drawable/searchdrawable"
+            android:text="@string/how_to_use_app"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sp"
+            app:cornerRadius="6dp"
+            android:paddingHorizontal="@dimen/_10dp"
+            android:paddingVertical="@dimen/_10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/viewdemo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+        <View
+            android:id="@+id/viewdemo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/watchTutorial"
+            app:layout_constraintEnd_toStartOf="@+id/gotoYoutube"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/gotoYoutube"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/searchdrawable"
+            android:fontFamily="@font/lato_regular"
+            android:text="@string/goto_youtube"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sp"
+            app:cornerRadius="6dp"
+            android:paddingHorizontal="@dimen/_10dp"
+            android:paddingVertical="@dimen/_10dp"
+            app:layout_constraintStart_toEndOf="@+id/viewdemo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/demo"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bangers"
+            android:lineHeight="20sp"
+            android:paddingStart="10dp"
+            android:letterSpacing="0.1"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="@string/see_all_the_trending_videos"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/hr_recycler"
+            app:layout_constraintStart_toStartOf="parent" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hr_recycler"
+            android:layout_marginBottom="@dimen/_15dp"
+            android:paddingEnd="@dimen/_70dp"
+            android:paddingStart="@dimen/_10dp"
+            android:clipToPadding="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

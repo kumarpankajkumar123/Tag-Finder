@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tagfinderapp.R
 import com.example.tagfinderapp.Model.ImageModel
+import com.example.tagfinderapp.R
 
 class HomeOffersAdapter(
     private val context: Context,

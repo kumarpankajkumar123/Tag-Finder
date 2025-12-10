@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/videoFragment">
+
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.example.tagfinderapp.Fragments.VideoDetail"
+        android:label="@string/video_fragment"
+        tools:layout="@layout/fragment_video_detail">
+
+        <action
+            android:id="@+id/videoFragment_to_tagsFragment"
+            app:destination="@+id/tagsFragment"/>
+
+        <action
+            android:id="@+id/videoFragment_to_appTutorialFragment"
+            app:destination="@+id/appTotorialFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/keywordFragment"
+        android:name="com.example.tagfinderapp.Fragments.KeywordS"
+        android:label="@string/keywords_fragment"
+        tools:layout="@layout/fragment_keyword_s">
+
+        <action
+            android:id="@+id/keywordsFragment_to_subKeywordsFragment"
+            app:destination="@id/subKeywordsFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.tagfinderapp.Fragments.History"
+        android:label="@string/history_fragment"
+        tools:layout="@layout/fragment_history">
+
+        <action android:id="@+id/historyFragment_to_tagsFragment"
+            app:destination="@+id/tagsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/moreFragment"
+        android:name="com.example.tagfinderapp.Fragments.More"
+        android:label="@string/more_fragment"
+        tools:layout="@layout/fragment_more"/>
+
+    <fragment
+        android:id="@+id/tagsFragment"
+        android:label="@string/tags_fragment"
+        android:name="com.example.tagfinderapp.Fragments.TagsFragmant"
+        tools:layout="@layout/fragment_tags_fragmant"/>
+
+    <fragment
+        android:id="@+id/subKeywordsFragment"
+        android:name="com.example.tagfinderapp.Fragments.SubKeywords"
+        android:label="@string/sub_keywords"
+        tools:layout="@layout/fragment_sub_keywords">
+
+        <action
+            android:id="@+id/competitor_to_tagsfragment"
+            app:destination="@+id/tagsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/CompetitorFragment"
+        android:name="com.example.tagfinderapp.Fragments.Competitors"
+        tools:layout="@layout/fragment_compititor"
+        android:label="competitorFragment"/>
+
+    <fragment
+        android:id="@+id/appTotorialFragment"
+        android:name="com.example.tagfinderapp.Fragments.AppTutorialFragment"
+        tools:layout="@layout/dialogiscreenshot"
+        android:label="appTutorialFragment"/>
+
+</navigation>

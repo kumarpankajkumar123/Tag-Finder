@@ -2,57 +2,67 @@ package com.example.tagfinderapp.Fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.tagfinderapp.Adaptor.HistoryAdapter
-import com.example.tagfinderapp.Inteface.ApiInterface
-import com.example.tagfinderapp.Model.VideoModel
-import com.example.tagfinderapp.Network.RetrofitInstanse
+import com.example.tagfinderapp.Adaptor.HistoryViewPager2Adapter
+import com.example.tagfinderapp.Model.HistoryImageVideoIdModel
 import com.example.tagfinderapp.R
-import com.example.tagfinderapp.Repository.Repository
 import com.example.tagfinderapp.Util.UserDatabase
-import com.example.tagfinderapp.ViewModal.TagViewModelFactory
 import com.example.tagfinderapp.ViewModal.TagsViewModel
 import com.example.tagfinderapp.databinding.FragmentHistoryTagsBinding
-import com.squareup.picasso.Picasso
-import kotlinx.coroutines.launch
-import org.json.JSONObject
-import java.util.regex.Pattern
 
 class HistoryTags : Fragment() {
-    lateinit var binding : FragmentHistoryTagsBinding
+    lateinit var binding: FragmentHistoryTagsBinding
+    lateinit var adapter: HistoryAdapter
 
-    private lateinit var tagviewmodel: TagsViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentHistoryTagsBinding.inflate(inflater, container, false)
+        binding = FragmentHistoryTagsBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userId = UserDatabase.generateOrCreatedId() // Get the unique user ID
-        val historyList = UserDatabase.getHistoryData(userId) // Fetch the history data
-        Log.e("userId",""+userId)
-        Log.e("historyList",""+historyList)
-        Log.e("userDataHistoryTag",""+UserDatabase.getUserData(userId))
+        val jsonArray = UserDatabase.getVideoList()
+        val historyList = mutableListOf<HistoryImageVideoIdModel>()
 
-        val recyclerView = binding.historyTagRecyclerview
-        val historyAdapter = HistoryAdapter(historyList)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = historyAdapter
+        for (i in 0 until jsonArray.length()) {
+            val obj = jsonArray.getJSONObject(i)
+            val videoId = obj.getString("videoId")
+            val thumbnail = obj.getString("thumbnail")
+            val description = obj.getString("description")
+            historyList.add(
+                HistoryImageVideoIdModel(
+                    thumbnailUrl = thumbnail,
+                    videoId,
+                    description
+                )
+            )
+        }
 
+        if (historyList.isEmpty()) {
+            binding.noData.isVisible = true
+            binding.historyTagRecyclerview.isVisible = false
+        } else {
+            binding.noData.isVisible = false
+            binding.historyTagRecyclerview.isVisible = true
+            binding.historyTagRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+            adapter = HistoryAdapter(historyList) { videoId ->
+                val bundle = Bundle()
+                bundle.putString("historyVideoId", videoId)
+                findNavController().navigate(R.id.historyFragment_to_tagsFragment, bundle)
+            }
+            binding.historyTagRecyclerview.adapter = adapter
+        }
     }
 }

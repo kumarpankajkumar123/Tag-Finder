@@ -2,36 +2,35 @@ package com.example.tagfinderapp.Fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.tagfinderapp.Adaptor.KeywordsAdaptor
-import com.example.tagfinderapp.Adaptor.TodayVideoAdaptor
-import com.example.tagfinderapp.Inteface.ApiInterface
+import com.example.tagfinderapp.Model.ItemXX
+import com.example.tagfinderapp.Network.ApiHandler
 import com.example.tagfinderapp.Network.RetrofitInstanse
-import com.example.tagfinderapp.R
 import com.example.tagfinderapp.Repository.Repository
+import com.example.tagfinderapp.Util.ProgressDialog
 import com.example.tagfinderapp.ViewModal.KeywordsViewModelFctory
 import com.example.tagfinderapp.ViewModal.KeyworsViewModel
+import com.example.tagfinderapp.appConst.AppConst
 import com.example.tagfinderapp.databinding.FragmentDataKeyWordsBinding
-import kotlinx.coroutines.launch
 
-class DataKeyWords : Fragment() {
-    lateinit var binding : FragmentDataKeyWordsBinding
-    lateinit var keywordsViewModel: KeyworsViewModel
-    lateinit var recycler: RecyclerView
+class DataKeyWords(val keyword: String) : Fragment() {
+    lateinit var binding: FragmentDataKeyWordsBinding
+    lateinit var competitorViewModel: KeyworsViewModel
+    lateinit var adaptor: KeywordsAdaptor
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentDataKeyWordsBinding.inflate(inflater, container, false)
+        binding = FragmentDataKeyWordsBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -39,46 +38,82 @@ class DataKeyWords : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val receivedString = arguments?.getString("keywords")
-        Log.e("sub fragment keyword",""+receivedString)
+        Log.e("sub fragment keyword", "" + receivedString)
 
-        val retrofit = RetrofitInstanse
-        // Create the Repository
-        val repository = Repository(retrofit.getKeywordsRetrofit().create(ApiInterface::class.java))
-        // Create the ViewModelFactory with the repository
+        val retrofit = RetrofitInstanse.getRetrofit()
+        val repository = Repository(retrofit)
         val factory = KeywordsViewModelFctory(repository)
-        // Get the ViewModel using ViewModelProvider and the factory
-        keywordsViewModel = ViewModelProvider(this, factory).get(KeyworsViewModel::class.java)
+        competitorViewModel = ViewModelProvider(this, factory).get(KeyworsViewModel::class.java)
 
-        keywordsViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
+        binding.tagsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+        competitorViewModel.getCompetitor(
+            AppConst.snippet, AppConst.Api_Key, AppConst.twenty,
+            AppConst.type_channel, keyword
+        )
 
-        lifecycleScope.launch {
-            keywordsViewModel.getKeywords(receivedString.toString())
-            keywordsViewModel.data.observe(viewLifecycleOwner) { result ->
-                result.onSuccess { json ->
-                    // Use the processed data here, for example:
-                    val query = json[0] as? String
-                    val suggestions = json[1] as? List<*>
-                    val suggestSubtypes = (json[3] as? Map<*, *>)?.get("google:suggestsubtypes") as? List<List<Int>>
-                    if (suggestions != null) {
-                        processdatatag(suggestions)
-                    }
-                    // Update UI with this data
-                    Log.d("Data Observed", "Query: $query, Suggestions: $suggestions")
+        competitorViewModel.competitorData.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                is ApiHandler.Loading -> {
+                    ProgressDialog.show(requireContext())
                 }
-                result.onFailure { error ->
-                    Toast.makeText(context, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+
+                is ApiHandler.Success -> {
+                    ProgressDialog.dismiss()
+                    val list = status.data?.items
+                    if (list != null) {
+                        setupRecyclerview(list)
+                    }
+                }
+
+                is ApiHandler.Failure -> {
+                    ProgressDialog.dismiss()
                 }
             }
         }
+
+        binding.cancelall.setOnClickListener {
+            clearAllCheckboxes()
+        }
+
+        binding.searchbtn.setOnClickListener {
+            copySelectedTags()
+        }
+
+        binding.selecall.setOnClickListener {
+            selectAllTags()
+        }
+
+        binding.copyall.setOnClickListener {
+            copyAllTags()
+        }
     }
 
-    fun processdatatag(list : List<*>){
-        recycler = binding.tagsRecyclerview
-        recycler.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recycler.adapter = KeywordsAdaptor(requireContext(), list)
+    fun setupRecyclerview(list: List<ItemXX>) {
+        adaptor = KeywordsAdaptor(requireContext(), list){ isAnyChecked ->
+            if (isAnyChecked) {
+                binding.content.isVisible = true
+            } else {
+                binding.content.isVisible = false
+            }
+        }
+        binding.tagsRecyclerview.adapter = adaptor
+    }
+
+    fun clearAllCheckboxes() {
+        adaptor.clearSelection() // Clear all selections in the adapter
+    }
+
+    fun copySelectedTags() {
+        adaptor.copySelectedTags()
+    }
+
+    fun selectAllTags() {
+        adaptor.selectAllTags()
+    }
+
+    fun copyAllTags() {
+        adaptor.selectAllTags() // Select all checkboxes first
+        adaptor.copyAllTags()   // Copy all tags
     }
 
 }

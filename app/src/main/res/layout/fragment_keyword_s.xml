@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.KeywordS"
-    android:background="@color/white5">
+    android:background="@color/white4">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/search_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="10dp"
-        android:elevation="5dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="@dimen/_10dp"
+        android:elevation="3dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="2"
@@ -22,63 +23,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/search_edit_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:background="@drawable/searchdrawable"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:background="@android:color/transparent"
             android:drawableLeft="@drawable/icon_search"
             android:drawablePadding="10dp"
             android:elevation="5dp"
-            android:textSize="13dp"
+            android:textSize="@dimen/_15sp"
             android:textColorHint="@color/black"
-            android:hint="Search Keywords like cricket"
+            android:hint="@string/search_keywords_like_cricket"
             android:inputType="text"
             android:padding="10dp"
-            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/selected_tab_color"
             android:textCursorDrawable="@drawable/cursor"
             app:layout_constraintEnd_toStartOf="@+id/searchbtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/searchbtn"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/white4"
+            android:maxLines="1"
+            android:paddingVertical="@dimen/_5dp"
+            android:paddingHorizontal="@dimen/_10dp"
+            android:gravity="center"
+            android:ellipsize="end"
+            android:background="@drawable/search_drawer"
             android:fontFamily="@font/comfortaa_medium"
-            android:text="search"
+            android:text="@string/search"
             android:textAllCaps="false"
             android:textColor="@color/black"
             app:cornerRadius="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/search_edit_text"
+            app:layout_constraintStart_toEndOf="@+id/search_edit_text"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/search_edit_text" />
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/insideframlayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/keywords_recyclerview"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:visibility="gone"-->
-<!--        android:layout_marginStart="10dp"-->
-<!--        android:layout_marginEnd="10dp"-->
-<!--        tools:listitem="@layout/tags_design"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/search_linear" />-->
-
-
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

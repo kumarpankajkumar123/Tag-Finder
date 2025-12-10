@@ -1,169 +1,148 @@
 package com.example.tagfinderapp.Fragments
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.addCallback
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.tagfinderapp.Inteface.ApiInterface
+import androidx.navigation.fragment.findNavController
+import com.example.tagfinderapp.Adaptor.SubChildPagerAdapter
 import com.example.tagfinderapp.Model.VideoModel
+import com.example.tagfinderapp.Network.ApiHandler
 import com.example.tagfinderapp.Network.RetrofitInstanse
 import com.example.tagfinderapp.R
 import com.example.tagfinderapp.Repository.Repository
+import com.example.tagfinderapp.Util.ProgressDialog
 import com.example.tagfinderapp.Util.UserDatabase
 import com.example.tagfinderapp.ViewModal.TagViewModelFactory
 import com.example.tagfinderapp.ViewModal.TagsViewModel
+import com.example.tagfinderapp.appConst.AppConst
+import com.example.tagfinderapp.databinding.CustomTabLayoutBinding
 import com.example.tagfinderapp.databinding.FragmentTagsFragmantBinding
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 class TagsFragmant : Fragment() {
-    private var binding: FragmentTagsFragmantBinding? = null
+    lateinit var binding: FragmentTagsFragmantBinding
     private lateinit var tagviewmodel: TagsViewModel
-    lateinit var videoUrl: String
-    lateinit var videoId: String
-    private var isAnyChecked = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentTagsFragmantBinding.inflate(inflater, container, false)
-        return binding!!.root
+        binding = FragmentTagsFragmantBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        videoUrl = arguments?.getString("video_url").toString()
-        val bool = arguments?.getString("boolean").toString()
+        val videoUrl = arguments?.getString("video_url") ?: ""
+        val imageClickVideoId = arguments?.getString("todayVideoId") ?: ""
+        val competitorVideoId = arguments?.getString("competitorVideoId") ?: ""
+        val historyVideoId = arguments?.getString("historyVideoId") ?: ""
 
-        UserDatabase.init(requireContext())
-        val retrofit = RetrofitInstanse
-        val repository = Repository(retrofit.getRetrofit().create(ApiInterface::class.java))
+        val retrofit = RetrofitInstanse.getRetrofit()
+        val repository = Repository(retrofit)
         val factory = TagViewModelFactory(repository)
         tagviewmodel = ViewModelProvider(this, factory).get(TagsViewModel::class.java)
-//        val videoId = receivedString?.let { getVideoIdFromUrl(it) }
 
-        if (videoUrl != null && !bool.equals("true")) {
-             videoId = getVideoIdFromUrl(videoUrl).toString()
-            Log.e("videoId videourl", "" + videoId)
-            load_data(videoId)
-        }
-        else{
-            videoId = arguments?.getString("todayVideoId").toString()
-            Log.e("imageId", "" + videoId)
-            loadData(videoId)
-        }
-
-        if (savedInstanceState == null) {
-            val subTagsFragment = SubTags()
-            val bundle = Bundle()
-
-            Log.e("TagsFragment subtags open ", "" + videoId)
-            Log.e("TagsFragment subtags open ", "" + videoUrl)
-
-//            bundle.putString("video_url", videoUrl)
-            bundle.putString("videoId", videoId)
-            subTagsFragment.arguments = bundle
-
-            // Load the first subchild fragment by default
-            childFragmentManager.beginTransaction()
-                .replace(R.id.subchildFramlayout, subTagsFragment)
-                .commit()
-        }
-        binding?.tabLayout?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                val selectedFragment: Fragment = when (tab?.position) {
-                    0 -> SubTags()
-                    1 -> Thumbnail()
-                    2 -> MoreVideoDetails()
-                    else -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Please select a valid tab",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return
-                    }
-                }
-                val bundle = Bundle()
-//                bundle.putString("video_url", videoUrl)
-                bundle.putString("videoId", videoId)
-                selectedFragment.arguments = bundle
-
-                // Replace the fragment in the container
-                childFragmentManager.beginTransaction()
-                    .replace(R.id.subchildFramlayout, selectedFragment)
-                    .commit()
+        if (videoUrl.isNotEmpty()) {
+            val getVideoId = getVideoIdFromUrl(videoUrl)
+            Log.e("videoId getVideoId", "" + getVideoId)
+            if (getVideoId != null) {
+                load_data(getVideoId)
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // Handle if needed
-            }
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // Handle if needed
-            }
-        })
-
-        binding?.backarrow?.setOnClickListener {
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(
-                R.id.viewpager2,
-                VideoDetail()
-            ) // R.id.viewpager2 is the container in MainActivity
-//            transaction.addToBackStack(null) // Add to back stack if you want to maintain navigation history
-            transaction.commit()
-        }
-        binding?.cancelall?.setOnClickListener {
-            isAnyChecked = false
-            // Reset the UI
-            binding?.keyword1?.visibility = View.VISIBLE
-            binding?.content?.visibility = View.GONE
-
-            // Notify SubTags fragment to clear selection
-            val subTagsFragment =
-                childFragmentManager.findFragmentById(R.id.subchildFramlayout) as? SubTags
-            subTagsFragment?.clearAllCheckboxes()
-        }
-        // Handle Copy Selected Tags Button
-        binding?.searchbtn?.setOnClickListener {
-            (childFragmentManager.findFragmentById(R.id.subchildFramlayout) as? SubTags)?.copySelectedTags()
         }
 
-        // Handle Select All Button
-        binding?.selecall?.setOnClickListener {
-            (childFragmentManager.findFragmentById(R.id.subchildFramlayout) as? SubTags)?.selectAllTags()
+        if (imageClickVideoId.isNotEmpty()) {
+            Log.d("videoId imageClicked", "onViewCreated: ${imageClickVideoId}")
+            load_data(imageClickVideoId)
         }
 
-        // Handle Copy All Button
-        binding?.copyall?.setOnClickListener {
-            (childFragmentManager.findFragmentById(R.id.subchildFramlayout) as? SubTags)?.copyAllTags()
+        if (competitorVideoId.isNotEmpty()) {
+            Log.d("videoId imageClicked", "onViewCreated: ${competitorVideoId}")
+            load_data(competitorVideoId)
+        }
+
+        if (historyVideoId.isNotEmpty()) {
+            Log.d("videoId imageClicked", "onViewCreated: ${historyVideoId}")
+            load_data(historyVideoId)
+        }
+
+        binding.backarrow.setOnClickListener {
+            findNavController().navigateUp()
         }
 
     }
 
     private fun processdatatag(it: VideoModel) {
-        val tittle = it.items.get(0).snippet.title
 
+        UserDatabase.saveVideo(it.items.firstOrNull()?.id?:"", it.items.firstOrNull()?.snippet?.thumbnails?.high?.url?:"",it.items.firstOrNull()?.snippet?.description?:"")
+
+        val tittle = it.items.firstOrNull()?.snippet?.title ?: ""
         Log.e("tittle", "" + tittle)
-        binding?.keyword?.text = tittle
+        binding.keyword.text = tittle
 
-        val userId = UserDatabase.generateOrCreatedId()
-        Log.e("TagsFragmentId", "" + userId)
-        Log.e("TagFragmentData", "" + UserDatabase.getUserData(userId))
+        val pagerAdapter = SubChildPagerAdapter(this, it)
+        binding.subchildViewPager.adapter = pagerAdapter
 
-        val thumbnail = mutableListOf<String>()
-        thumbnail.add(it.items.get(0).snippet.thumbnails.standard.url)
-        UserDatabase.addThumbnailsForUrl(videoUrl, thumbnail, userId)
-        Log.e("TagFragmentUserData", "" + UserDatabase.getUserData(userId))
+        TabLayoutMediator(binding.tabLayout, binding.subchildViewPager) { tab, position ->
+            val customView = CustomTabLayoutBinding.inflate(LayoutInflater.from(requireContext()))
+            customView.tabText.text = when (position) {
+                0 -> AppConst.Tags
+                1 -> AppConst.thumbnail
+                2 -> AppConst.more
+                else -> ""
+            }
+            val colorRes = if (position == 0) {
+                R.color.purple_700
+            } else {
+                R.color.black
+            }
+            customView.tabText.setTextColor(
+                ContextCompat.getColor(requireContext(), colorRes)
+            )
+            tab.customView =  customView.root
+        }.attach()
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                tab.customView?.let { view ->
+                    val customBinding = CustomTabLayoutBinding.bind(view)
+                    customBinding.tabText.setTextColor(
+                        ContextCompat.getColor(requireContext(), R.color.purple_700)
+                    )
+                    // optional: thoda bold bhi kar sakte:
+                    customBinding.tabText.setTypeface(null, Typeface.BOLD)
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                tab.customView?.let { view ->
+                    val customBinding = CustomTabLayoutBinding.bind(view)
+                    customBinding.tabText.setTextColor(
+                        ContextCompat.getColor(requireContext(), android.R.color.black)
+                    )
+                    // optional:
+                    customBinding.tabText.setTypeface(null, Typeface.NORMAL)
+                }
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+
+            }
+        })
+
     }
 
     private fun getVideoIdFromUrl(getvalue: String): String? {
@@ -178,58 +157,37 @@ class TagsFragmant : Fragment() {
             return macher1.group(1)
         } else {
             Toast.makeText(requireContext(), "please enter correct video url", Toast.LENGTH_SHORT)
+                .show()
             return null
         }
     }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
+
     fun load_data(videoId: String) {
         Log.e("load_data", "call hua")
 
-
         lifecycleScope.launch {
             tagviewmodel.getData(
-                "snippet",
+                AppConst.snippet,
                 videoId,
-                "AIzaSyCrdo85_ezkyP0tMC-rC52Hlpr2qPjD7E8"
+                AppConst.Api_Key
             )
-            tagviewmodel.tags.observe(viewLifecycleOwner, Observer {
-                it.onSuccess {
-                    processdatatag(it)
-                }
-                it.onFailure {
-                    Toast.makeText(requireContext(), "on failure methods", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            })
-        }
-    }
-    fun loadData(videoId: String) {
-        Log.e("loadData", "call hua")
-        lifecycleScope.launch {
-            tagviewmodel.getData(
-                "snippet",
-                videoId,
-                "AIzaSyCrdo85_ezkyP0tMC-rC52Hlpr2qPjD7E8"
-            )
-            tagviewmodel.tags.observe(viewLifecycleOwner, Observer {
-                it.onSuccess {
-                    processdatatag(it)
-                }
-                it.onFailure {
-                    Toast.makeText(requireContext(), "on failure methods", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            })
-        }
-    }
+            tagviewmodel.tags.observe(viewLifecycleOwner) { status ->
+                when (status) {
 
-    fun onSubTagsCheckBoxStateChanged(isAnyChecked: Boolean) {
-        // Hide or show LinearLayout
-        binding?.keyword1?.visibility = if (isAnyChecked) View.GONE else View.VISIBLE
-        binding?.content?.visibility = if (isAnyChecked) View.VISIBLE else View.GONE
+                    is ApiHandler.Loading -> {
+                        ProgressDialog.show(requireContext())
+                    }
+                    is ApiHandler.Success -> {
+                        ProgressDialog.dismiss()
+                        val res = status.data
+                        processdatatag(res)
+                    }
 
+                    is ApiHandler.Failure -> {
+                        ProgressDialog.dismiss()
+                    }
+                }
+            }
+        }
     }
 }

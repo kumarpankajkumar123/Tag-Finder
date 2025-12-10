@@ -49,7 +49,6 @@ class NetworkMonitor(private val context: Context, private val onInternetRestore
     fun stopMonitoring() {
         connectivityManager.unregisterNetworkCallback(networkCallback)
     }
-
     private fun isOnline(context: Context): Boolean {
         val capabilities =
             connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)

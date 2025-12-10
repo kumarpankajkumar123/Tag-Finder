@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.MoreVideoDetails"
-    android:background="@color/white4">
+    android:background="@color/white4"
+    tools:context=".Fragments.MoreVideoDetails">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,167 +14,172 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <LinearLayout
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/videoTittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:orientation="vertical"
+                android:visibility="gone"
+                android:background="@drawable/searchdrawable"
                 android:elevation="3dp"
-                android:background="@drawable/searchdrawable">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
+                android:orientation="vertical">
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Video Tittle"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
                         android:layout_marginStart="10dp"
                         android:fontFamily="@font/roboto_medium"
+                        android:padding="10dp"
+                        android:text="Video Tittle"
                         android:textColor="@color/black"
-                        android:padding="10dp"/>
-                </LinearLayout>
-                <TextView
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tittle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Video Tittle"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:textSize="15sp"
-                    android:lineHeight="20sp"
                     android:fontFamily="@font/roboto_medium"
+                    android:lineHeight="20sp"
+                    android:padding="10dp"
+                    android:text="Video Tittle"
                     android:textColor="@color/black"
-                    android:padding="10dp"/>
-            </LinearLayout>
+                    android:textSize="15sp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/videoDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:elevation="3dp"
+                android:layout_margin="10dp"
+                android:visibility="gone"
                 android:background="@drawable/searchdrawable"
-                android:layout_margin="10dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
+                android:elevation="3dp"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Video Description"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:layout_marginStart="10dp"
-                        android:fontFamily="@font/roboto_medium"
-                        android:textColor="@color/black"
-                        android:padding="10dp"/>
-                </LinearLayout>
-                <TextView
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:padding="10dp"
+                    android:text="Video Description"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Video des"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:textSize="15sp"
-                    android:lineHeight="20sp"
                     android:fontFamily="@font/roboto_medium"
+                    android:lineHeight="20sp"
+                    android:padding="10dp"
+                    android:text="Video des"
                     android:textColor="@color/black"
-                    android:padding="10dp"/>
-            </LinearLayout>
+                    android:textSize="15sp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/channelDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_margin="10dp"
+                android:visibility="gone"
+                android:background="@drawable/searchdrawable"
                 android:elevation="3dp"
-                android:background="@drawable/searchdrawable">
-                <LinearLayout
-                    android:layout_width="match_parent"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Channel Details"
-                        android:textStyle="bold"
-                        android:textSize="15sp"
-                        android:layout_marginStart="10dp"
-                        android:fontFamily="@font/roboto_medium"
-                        android:textColor="@color/black"
-                        android:padding="10dp"/>
-                </LinearLayout>
-                <TextView
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:padding="10dp"
+                    android:text="Channel Details"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/channelTittle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Video des"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:textSize="15sp"
-                    android:lineHeight="20sp"
                     android:fontFamily="@font/roboto_medium"
+                    android:lineHeight="20sp"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    android:text="Video des"
                     android:textColor="@color/black"
-                    android:padding="10dp"/>
-                <TextView
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/channelId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Video des"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:textSize="15sp"
-                    android:lineHeight="20sp"
                     android:fontFamily="@font/roboto_medium"
+                    android:lineHeight="20sp"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    android:text="Video des"
                     android:textColor="@color/black"
-                    android:padding="10dp"/>
-                <TextView
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Video des"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:textSize="15sp"
-                    android:lineHeight="20sp"
                     android:fontFamily="@font/roboto_medium"
+                    android:lineHeight="20sp"
+                    android:padding="10dp"
+                    android:text="Video des"
+                    android:visibility="gone"
                     android:textColor="@color/black"
-                    android:padding="10dp"/>
-                <TextView
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/videoId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Video des"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:textSize="15sp"
-                    android:lineHeight="20sp"
                     android:fontFamily="@font/roboto_medium"
+                    android:lineHeight="20sp"
+                    android:padding="10dp"
+                    android:text="Video des"
+                    android:visibility="gone"
                     android:textColor="@color/black"
-                    android:padding="10dp"/>
-            </LinearLayout>
+                    android:textSize="15sp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:progressTint="@color/black"
-        android:progressBackgroundTint="@color/white"
+        android:visibility="gone"
+        app:trackColor="@color/selected_tab_color"
+        app:trackThickness="@dimen/_3dp"
+        app:indicatorColor="@color/selected_tab_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

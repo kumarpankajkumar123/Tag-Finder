@@ -1,7 +1,6 @@
 package com.example.tagfinderapp.Fragments
 
 import android.R.id.message
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -17,7 +16,6 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
-import androidx.compose.ui.window.Dialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.example.tagfinderapp.R
@@ -27,17 +25,17 @@ import com.google.android.material.button.MaterialButton
 import java.io.File
 
 
-class More : Fragment(),OnClickListener {
+class More : Fragment(), OnClickListener {
 
     private val apkSharingHelper = ApkSharingHelper(this)
 
-    lateinit var binding : FragmentMoreBinding
+    lateinit var binding: FragmentMoreBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentMoreBinding.inflate(inflater,container,false)
+        binding = FragmentMoreBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -77,17 +75,21 @@ class More : Fragment(),OnClickListener {
 //                )
                 shareApk()
             }
+
             binding.question.id -> {
                 showDialog("question")
             }
+
             binding.policy.id -> {
                 showDialog("policy")
             }
+
             binding.rate.id -> {
                 showDialog("rate")
             }
         }
     }
+
     private fun openUrl(url: String) {
         try {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -104,11 +106,12 @@ class More : Fragment(),OnClickListener {
             Toast.makeText(requireContext(), "Unable to open link", Toast.LENGTH_SHORT).show()
         }
     }
-    private fun sendMsg(mobile: String, msg: String){
+
+    private fun sendMsg(mobile: String, msg: String) {
         var toNumber = "+91 $mobile" // contains spaces.
         toNumber = toNumber.replace("+", "").replace(" ", "");
 
-        val sendIntent  = Intent("android.intent.action.MAIN");
+        val sendIntent = Intent("android.intent.action.MAIN");
         sendIntent.putExtra("jid", toNumber + "@s.whatsapp.net");
         sendIntent.putExtra(Intent.EXTRA_TEXT, msg);
         sendIntent.setAction(Intent.ACTION_SEND);
@@ -119,8 +122,9 @@ class More : Fragment(),OnClickListener {
 
     fun shareApk() {
         // Path to the APK file
-        val apkFile = File(Environment.getExternalStorageDirectory(), "Download/app-debug-androidTest.apk")
-        Log.e("apk file path",""+apkFile)
+        val apkFile =
+            File(Environment.getExternalStorageDirectory(), "Download/app-debug-androidTest.apk")
+        Log.e("apk file path", "" + apkFile)
 
         // Check if the file exists
         if (apkFile.exists()) {
@@ -130,7 +134,7 @@ class More : Fragment(),OnClickListener {
                 "com.example.tagfinderapp.fileprovider",  // Replace with your app's FileProvider authority
                 apkFile
             )
-            Log.e("apk uri path",""+apkUri)
+            Log.e("apk uri path", "" + apkUri)
             // Create an Intent to share the APK
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "application/vnd.android.package-archive"
@@ -146,86 +150,91 @@ class More : Fragment(),OnClickListener {
         }
     }
 
-    private fun showDialog(q : String) {
-       if(q.equals("question")){
-           val dialogView =
-               LayoutInflater.from(requireContext()).inflate(R.layout.questionsanswer, null)
-           val dialog = android.app.Dialog(requireContext())
-           dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-           dialog.setContentView(dialogView)
-           dialog.window?.setLayout(
-               WindowManager.LayoutParams.MATCH_PARENT,
-               WindowManager.LayoutParams.WRAP_CONTENT
-           )
-           dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-           val btn = dialogView.findViewById<MaterialButton>(R.id.watchTutorial1)
-           btn.setOnClickListener{
-               try{
-                   val intent = Intent(
-                       Intent.ACTION_SENDTO, Uri.fromParts(
-                           "mailto", "pankajkm347@gmail.com", null
-                       )
-                   )
-                   intent.putExtra(Intent.EXTRA_SUBJECT, "Tag#Finder is not working")
-                   intent.putExtra(Intent.EXTRA_TEXT, message)
-                   startActivity(Intent.createChooser(intent, "Choose an Email client :"))
-                   Toast.makeText(requireContext(),"Thank you for contact me",Toast.LENGTH_SHORT).show()
-                   dialog.dismiss()
+    private fun showDialog(q: String) {
+        if (q.equals("question")) {
+            val dialogView =
+                LayoutInflater.from(requireContext()).inflate(R.layout.questionsanswer, null)
+            val dialog = android.app.Dialog(requireContext())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(dialogView)
+            dialog.window?.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
+            )
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val btn = dialogView.findViewById<MaterialButton>(R.id.watchTutorial1)
+            btn.setOnClickListener {
+                try {
+                    val intent = Intent(
+                        Intent.ACTION_SENDTO, Uri.fromParts(
+                            "mailto", "pankajkm347@gmail.com", null
+                        )
+                    )
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Tag#Finder is not working")
+                    intent.putExtra(Intent.EXTRA_TEXT, message)
+                    startActivity(Intent.createChooser(intent, "Choose an Email client :"))
+                    Toast.makeText(requireContext(), "Thank you for contact me", Toast.LENGTH_SHORT)
+                        .show()
+                    dialog.dismiss()
 
-               } catch ( e : Exception){
-                   Toast.makeText(requireContext(),"not sending email",Toast.LENGTH_SHORT).show()
-               }
-           }
-           dialog.show()
-       }
-        else if(q.equals("policy")){
-           val dialogView =
-               LayoutInflater.from(requireContext()).inflate(R.layout.privacypolicy, null)
-           val dialog = android.app.Dialog(requireContext())
-           dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-           dialog.setContentView(dialogView)
-           dialog.window?.setLayout(
-               WindowManager.LayoutParams.MATCH_PARENT,
-               WindowManager.LayoutParams.WRAP_CONTENT
-           )
-           dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-           dialog.show()
-       }
-        else{
-           val dialogView =
-               LayoutInflater.from(requireContext()).inflate(R.layout.rateapp, null)
-           val dialog = android.app.Dialog(requireContext())
-           dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-           dialog.setContentView(dialogView)
-           dialog.window?.setLayout(
-               WindowManager.LayoutParams.MATCH_PARENT,
-               WindowManager.LayoutParams.WRAP_CONTENT
-           )
-           dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "not sending email", Toast.LENGTH_SHORT).show()
+                }
+            }
+            dialog.show()
+        } else if (q.equals("policy")) {
+            val dialogView =
+                LayoutInflater.from(requireContext()).inflate(R.layout.privacypolicy, null)
+            val dialog = android.app.Dialog(requireContext())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(dialogView)
+            dialog.window?.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
+            )
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+        } else {
+            val dialogView =
+                LayoutInflater.from(requireContext()).inflate(R.layout.rateapp, null)
+            val dialog = android.app.Dialog(requireContext())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(dialogView)
+            dialog.window?.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
+            )
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-           val btn = dialogView.findViewById<MaterialButton>(R.id.searchbtn)
-           btn.setOnClickListener {
-               val rating = dialogView.findViewById<EditText>(R.id.search_edit_text1)
-               val stringrating : String = rating.text?.toString()?.trim().toString()
-               Log.e("rating",""+stringrating)
-               if(stringrating.isEmpty()){
-                   Toast.makeText(requireContext(),"please enter rating",Toast.LENGTH_SHORT).show()
+            val btn = dialogView.findViewById<MaterialButton>(R.id.searchbtn)
+            btn.setOnClickListener {
+                val rating = dialogView.findViewById<EditText>(R.id.search_edit_text1)
+                val stringrating: String = rating.text?.toString()?.trim().toString()
+                Log.e("rating", "" + stringrating)
+                if (stringrating.isEmpty()) {
+                    Toast.makeText(requireContext(), "please enter rating", Toast.LENGTH_SHORT)
+                        .show()
 
-               }
-               else if(stringrating.toInt() > 5 ){
-                   Toast.makeText(requireContext(),"please enter rating out of 5",Toast.LENGTH_SHORT).show()
+                } else if (stringrating.toInt() > 5) {
+                    Toast.makeText(
+                        requireContext(),
+                        "please enter rating out of 5",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-               }
-               else if(stringrating.toInt() < 1 ){
-                   Toast.makeText(requireContext(),"do not give negative rating",Toast.LENGTH_SHORT).show()
-               }
-               else{
-                   Toast.makeText(requireContext(),"Thank you..",Toast.LENGTH_SHORT).show()
-                   dialog.dismiss()
-               }
-           }
-           dialog.show()
-       }
+                } else if (stringrating.toInt() < 1) {
+                    Toast.makeText(
+                        requireContext(),
+                        "do not give negative rating",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(requireContext(), "Thank you..", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                }
+            }
+            dialog.show()
+        }
 
     }
 

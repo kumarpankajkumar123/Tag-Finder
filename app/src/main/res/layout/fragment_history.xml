@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.History"
-    android:background="@color/white5">
+    android:background="@color/white4">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout3"
@@ -21,22 +21,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="@color/purple_700"
         app:tabIndicatorHeight="3dp"
-        app:tabSelectedTextColor="@color/purple_700">
+        app:tabSelectedTextColor="@color/purple_700"/>
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TAGS" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="KEYWORDS" />
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <FrameLayout
-        android:id="@+id/historyframlayout"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/history_viewpager2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

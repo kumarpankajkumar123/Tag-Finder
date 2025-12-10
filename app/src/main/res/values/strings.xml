@@ -2,4 +2,38 @@
     <string name="app_name">Tag#Finder</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcomes">Welcomes</string>
+    <string name="video">video</string>
+    <string name="video_fragment">video_fragment</string>
+    <string name="keywords_fragment">keywords_fragment</string>
+    <string name="history_fragment">history_fragment</string>
+    <string name="more_fragment">more_fragment</string>
+    <string name="tags_fragment">tags_fragment</string>
+    <string name="enter_video_url">Enter video url</string>
+    <string name="search">Search</string>
+    <string name="how_to_use_app">App Tutorial</string>
+    <string name="goto_youtube">Move Utube</string>
+    <string name="see_all_the_trending_videos">See All the Trending Videos</string>
+    <string name="title_demo">title demo</string>
+    <string name="no_tags_found">no tags found</string>
+    <string name="no_history_found">No History Found</string>
+    <string name="no_thumbnail_found">no thumbnail</string>
+    <string name="sub_keywords">sub keywords</string>
+    <string name="search_keywords_like_cricket">Search Keywords lik fghkjgvjve cricket sdfghj sdfghj</string>
+
+    <string name="snippet">snippet</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="please_check_your_connection_and_come_back">please check your connection and come back</string>
+    <string name="select_all">Select all</string>
+    <string name="copy">Copy</string>
+    <string name="copy_all">Copy all</string>
+    <string name="share_the_app">Share the app</string>
+    <string name="view_privacy_policy">View privacy policy</string>
+    <string name="frequently_asked_questions">Frequently Asked Questions</string>
+    <string name="rate_our_app">Rate our app</string>
+    <string name="contact_us_direct">Contact us Direct</string>
+    <string name="linkedin">Linkedin</string>
+    <string name="instagram">Instagram</string>
+
+
 </resources>

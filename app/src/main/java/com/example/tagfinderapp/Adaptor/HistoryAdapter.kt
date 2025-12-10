@@ -1,15 +1,22 @@
 package com.example.tagfinderapp.Adaptor
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tagfinderapp.Model.HistoryImageVideoIdModel
 import com.example.tagfinderapp.R
 import com.squareup.picasso.Picasso
+import org.json.JSONArray
 
-class HistoryAdapter(private val historyList: List<Pair<String, String>>) :
+class HistoryAdapter(
+    private val historyList: List<HistoryImageVideoIdModel>,
+    val onItemClick: (String) -> Unit
+):
     RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     class HistoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -23,10 +30,20 @@ class HistoryAdapter(private val historyList: List<Pair<String, String>>) :
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        val (videoUrl, thumbnail) = historyList[position]
-//        holder.videoUrlTextView.text = videoUrl
-        Picasso.get().load(thumbnail).into(holder.thumbnailImageView)
-        holder.videoUrlTextView.visibility = View.GONE
+        val item = historyList[position]
+        val videoId = item.videoId // Replace with the actual property name
+        val thumbnailUrl = item.thumbnailUrl
+        val description = item.description
+        Log.d("historyThumbnail", "onBindViewHolder: ${thumbnailUrl}")
+        Picasso.get().load(thumbnailUrl).into(holder.thumbnailImageView)
+        holder.videoUrlTextView.isVisible = true
+        holder.videoUrlTextView.text = description
+
+        holder.itemView.setOnClickListener {
+            if(videoId != null){
+                onItemClick(videoId)
+            }
+        }
     }
 
     override fun getItemCount() = historyList.size

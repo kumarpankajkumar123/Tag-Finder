@@ -22,6 +22,10 @@ object DialogUtils {
         dialog.setCancelable(false)
         val view = LayoutInflater.from(context).inflate(R.layout.internet_design, null)
         dialog.setContentView(view)
+
+        val margin = (context.resources.displayMetrics.density * 32).toInt() // 32dp ~ adjustable
+        dialog.window?.decorView?.setPadding(margin, 0, margin, 0)
+
         dialog.window?.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT

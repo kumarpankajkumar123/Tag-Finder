@@ -1,34 +1,28 @@
 package com.example.tagfinderapp.Fragments
 
+import android.app.DownloadManager
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tagfinderapp.Adaptor.VideoAdaptor
-import com.example.tagfinderapp.Inteface.ApiInterface
+import com.example.tagfinderapp.Adaptor.DimensionAdapter
+import com.example.tagfinderapp.Model.DimensionModel
 import com.example.tagfinderapp.Model.VideoModel
-import com.example.tagfinderapp.Network.RetrofitInstanse
-import com.example.tagfinderapp.R
-import com.example.tagfinderapp.Repository.Repository
-import com.example.tagfinderapp.ViewModal.TagViewModelFactory
-import com.example.tagfinderapp.ViewModal.TagsViewModel
 import com.example.tagfinderapp.databinding.FragmentThumbnailBinding
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 
-class Thumbnail : Fragment() {
+class Thumbnail(val todayModel: VideoModel) : Fragment() {
 
     lateinit var binding: FragmentThumbnailBinding
-    private lateinit var tagviewmodel: TagsViewModel
-    private var videoId: String? = null
+    lateinit var adapter: DimensionAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,59 +35,123 @@ class Thumbnail : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val retrofit = RetrofitInstanse
-        val repository = Repository(retrofit.getRetrofit().create(ApiInterface::class.java))
-        val factory = TagViewModelFactory(repository)
-        tagviewmodel = ViewModelProvider(this, factory).get(TagsViewModel::class.java)
+        val imageUrl = todayModel.items.firstOrNull()?.snippet?.thumbnails?.standard?.url
+        val title = todayModel.items.firstOrNull()?.snippet?.title
 
-//        videoUrl = arguments?.getString("video_url")
-        videoId = arguments?.getString("videoId")
-        Log.e("Thumbnail videourl", "" + videoId)
+        if (imageUrl != null && title != null) {
+            binding.materialCardView.isVisible = true
+            Picasso.get()
+                .load(imageUrl)
+                .into(binding.thumbnail)
 
-        if(videoId != null){
-            loadData(videoId.toString())
+            binding.description.text = title
+        } else {
+            binding.noData.isVisible = true
         }
-    }
 
-    private fun processdatatag(it: VideoModel) {
-//        recycler = binding.tagsRecyclerview
-//        recycler.layoutManager =
-//            LinearLayoutManager(requireContext())
-//        val allTags = mutableListOf<String>()
-//        for (item in it.items) {
-//            item.snippet.tags?.let { tags ->
-//                allTags.addAll(tags) // Add all tags from this item
-//            }
-//        }
-//        recycler.adapter = VideoAdaptor(requireContext(),allTags)
+        val thumbnailClassObject = todayModel.items.firstOrNull()?.snippet?.thumbnails
+        val standard = thumbnailClassObject?.standard
+        val medium = thumbnailClassObject?.medium
+        val default = thumbnailClassObject?.default
+        val high = thumbnailClassObject?.high
+        val maxres = thumbnailClassObject?.maxres
 
-        Picasso.get()
-            .load(it.items.get(0).snippet.thumbnails.standard.url)
-            .into(binding.thumbnail)
+        val standardUrl = standard?.url
+        val standardWidth = standard?.width
+        val standardHeight = standard?.height
 
-        binding.description.text = it.items.get(0).snippet.title.toString()
+        val mediumUrl = medium?.url
+        val mediumWidth = medium?.width
+        val mediumHeight = medium?.height
 
-//        binding.tagText.text = it.items.get(0).snippet.thumbnails.standard.height.toString() + "X" +it.items.get(0).snippet.thumbnails.standard.width.toString()
-//        binding.tagTexth.text = it.items.get(0).snippet.thumbnails.high.height.toString() + "X" +it.items.get(0).snippet.thumbnails.high.width.toString()
-//        binding.tagTextm.text = it.items.get(0).snippet.thumbnails.medium.height.toString() + "X" +it.items.get(0).snippet.thumbnails.medium.width.toString()
+        val defaultUrl = default?.url
+        val defaultWidth = default?.width
+        val defaultHeight = default?.height
 
-    }
-    fun loadData(vid : String){
-        tagviewmodel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressbar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
-        lifecycleScope.launch {
-                tagviewmodel.getData("snippet",
-                    vid,
-                    "AIzaSyCrdo85_ezkyP0tMC-rC52Hlpr2qPjD7E8")
+        val highUrl = high?.url
+        val highWidth = high?.width
+        val highHeight = high?.height
+
+        val maxresUrl = maxres?.url
+        val maxerWidth = maxres?.width
+        val maxerHeight = maxres?.height
+
+
+        val dimensionList = listOf(
+            DimensionModel(defaultUrl,defaultWidth.toString(),defaultHeight.toString()),
+            DimensionModel(mediumUrl,mediumWidth.toString(),mediumHeight.toString()),
+            DimensionModel(highUrl,highWidth.toString(),highHeight.toString()),
+            DimensionModel(standardUrl,standardWidth.toString(),standardHeight.toString()),
+            DimensionModel(maxresUrl,maxerWidth.toString(),maxerHeight.toString())
+            )
+
+        binding.dimensionRecycler.layoutManager = LinearLayoutManager(requireContext())
+        adapter = DimensionAdapter(requireContext(),dimensionList){ isChecked,count ->
+            if (isChecked) {
+                binding.content.isVisible = true
+            } else {
+                binding.content.isVisible = false
             }
-            tagviewmodel.tags.observe(viewLifecycleOwner, Observer {
-                it.onSuccess {
-                    processdatatag(it)
+            if(count != 0){
+                binding.count.isVisible = true
+                binding.count.text = count.toString()
+            }else{
+                binding.count.isVisible = false
+                binding.count.text = count.toString()
+            }
+
+        }
+        binding.dimensionRecycler.adapter = adapter
+
+
+        binding.cancelall.setOnClickListener {
+            clearAllCheckboxes()
+        }
+
+        binding.downloadImage.setOnClickListener {
+            val urls = adapter.getSelectedUrl()
+
+            if (urls.isEmpty()) {
+                return@setOnClickListener
+            }
+
+            urls.forEach { url ->
+                if(url != null){
+                    downloadImage(url)
                 }
-                it.onFailure {
-                    Toast.makeText(requireContext(), "on failure methods", Toast.LENGTH_SHORT).show()
-                }
-            })
+            }
+        }
+
+    }
+
+    fun clearAllCheckboxes() {
+        adapter.clearSelection() // Clear all selections in the adapter
+    }
+
+    private fun downloadImage(url: String) {
+        try {
+            val request = DownloadManager.Request(Uri.parse(url))
+                .setTitle("image_${System.currentTimeMillis()}")
+                .setDescription("Downloading image")
+                .setNotificationVisibility(
+                    DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
+                )
+                .setAllowedOverMetered(true)
+                .setAllowedOverRoaming(true)
+                .setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_PICTURES,
+                    "TagFinder/image_${System.currentTimeMillis()}.jpg"
+                )
+
+            val dm = requireContext()
+                .getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            dm.enqueue(request)
+            adapter.clearSelection()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            adapter.clearSelection()
         }
     }
+
+}

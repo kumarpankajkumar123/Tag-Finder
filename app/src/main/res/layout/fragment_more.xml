@@ -4,208 +4,209 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.More"
+    android:scrollIndicators="none"
     android:orientation="vertical"
     android:background="@color/white5">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="10dp">
+        android:paddingBottom="@dimen/_10dp">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:padding="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/_15dp"
+            android:padding="@dimen/_5dp"
+            android:layout_marginTop="@dimen/_10dp"
             android:fontFamily="@font/cantora_one"
-            android:lineHeight="20sp"
+            android:lineHeight="@dimen/_20sp"
             android:text="Settings"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="20sp"/>
-        <LinearLayout
+            android:textSize="@dimen/_20sp"/>
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
+            android:padding="@dimen/_10dp"
+            android:layout_marginStart="@dimen/_15dp"
+            android:layout_marginEnd="@dimen/_15dp"
             android:layout_marginTop="10dp"
-            android:elevation="5dp"
+            android:elevation="@dimen/_5dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical"
             android:background="@drawable/searchdrawable">
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/Share_app"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_10dp"
                 android:elevation="2dp"
                 android:padding="8dp"
                 android:background="@drawable/searchdrawable"
                 android:backgroundTint="@color/color_selector">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_gravity="center"
                     android:src="@drawable/share_2598"/>
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/_15dp"
                     android:layout_gravity="center"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Share the app"
+                    android:text="@string/share_the_app"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 
-            </LinearLayout>
-            <LinearLayout
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/policy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_10dp"
                 android:elevation="2dp"
                 android:padding="8dp"
                 android:background="@drawable/searchdrawable"
                 android:backgroundTint="@color/color_selector">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_gravity="center"
                     android:src="@drawable/policy"/>
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/_15dp"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="View privacy policy"
+                    android:text="@string/view_privacy_policy"
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 
-            </LinearLayout>
-            <LinearLayout
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/question"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_10dp"
                 android:elevation="2dp"
                 android:padding="8dp"
                 android:background="@drawable/searchdrawable"
                 android:backgroundTint="@color/color_selector">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_gravity="center"
                     android:src="@drawable/question"/>
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/_15dp"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Frequently Asked Questions"
+                    android:text="@string/frequently_asked_questions"
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/help"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="@dimen/_15dp"
             android:padding="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/_10dp"
             android:fontFamily="@font/cantora_one"
             android:lineHeight="20sp"
             android:text="Help us Help You"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="20sp"/>
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="10dp"
+            android:padding="@dimen/_10dp"
+            android:layout_marginStart="@dimen/_15dp"
+            android:layout_marginEnd="@dimen/_15dp"
+            android:layout_marginTop="@dimen/_10dp"
             android:elevation="5dp"
             android:orientation="vertical"
             android:background="@drawable/searchdrawable">
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/rate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_10dp"
                 android:elevation="2dp"
                 android:padding="8dp"
                 android:background="@drawable/searchdrawable"
                 android:backgroundTint="@color/color_selector">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_gravity="center"
                     android:src="@drawable/rate"/>
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/_15dp"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Rate our app"
+                    android:text="@string/rate_our_app"
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
             <LinearLayout
                 android:id="@+id/contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_10dp"
                 android:elevation="2dp"
                 android:padding="8dp"
                 android:background="@drawable/searchdrawable"
                 android:backgroundTint="@color/color_selector">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_gravity="center"
                     android:src="@drawable/contact"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/_15dp"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Contact us Direct"
+                    android:text="@string/contact_us_direct"
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:textColor="@color/black"
@@ -214,121 +215,121 @@
             </LinearLayout>
 
 
-        </LinearLayout>
-        <TextView
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/follow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="@dimen/_15dp"
             android:padding="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/_10dp"
             android:fontFamily="@font/cantora_one"
             android:lineHeight="20sp"
             android:text="Follow us on social media"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="20sp"/>
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="10dp"
+            android:padding="@dimen/_10dp"
+            android:layout_marginStart="@dimen/_15dp"
+            android:layout_marginEnd="@dimen/_15dp"
+            android:layout_marginTop="@dimen/_10dp"
             android:elevation="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/_10dp"
             android:orientation="vertical"
             android:background="@drawable/searchdrawable">
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/facebook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_10dp"
                 android:elevation="2dp"
                 android:padding="8dp"
                 android:background="@drawable/searchdrawable"
                 android:backgroundTint="@color/color_selector">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_gravity="center"
                     android:src="@drawable/linkedin_svgrepo_com"/>
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/_15dp"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Linkedin"
+                    android:text="@string/linkedin"
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 
-            </LinearLayout>
-            <LinearLayout
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/instagram"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_10dp"
                 android:elevation="2dp"
                 android:padding="8dp"
                 android:background="@drawable/searchdrawable"
                 android:backgroundTint="@color/color_selector">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_gravity="center"
                     android:src="@drawable/insta"/>
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/_15dp"
                     android:fontFamily="@font/roboto_medium"
-                    android:text="Instagram"
+                    android:text="@string/instagram"
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/_15sp" />
 
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:layout_margin="10dp">
+                android:layout_margin="@dimen/_10dp">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_gravity="center"
                     android:src="@drawable/yt"/>
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/ytube"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/_15dp"
                     android:fontFamily="@font/roboto_medium"
                     android:text="visit my youtube channel"
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/_20sp" />
 
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </ScrollView>
