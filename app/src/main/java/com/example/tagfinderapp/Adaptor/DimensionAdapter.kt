@@ -1,8 +1,8 @@
 package com.example.tagfinderapp.Adaptor
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import android.util.MutableInt
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -19,19 +19,20 @@ class DimensionAdapter(
     private var count = 0
     private val checkedStates = mutableMapOf<Int, Boolean>() // Track checked positions
 
-    inner class MyDimesionClass(val binging: TagsDesignBinding) :
+     class MyDimesionClass(val binging: TagsDesignBinding) :
         RecyclerView.ViewHolder(binging.root)
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): DimensionAdapter.MyDimesionClass {
+    ): MyDimesionClass {
         val binding = TagsDesignBinding.inflate(LayoutInflater.from(context), parent, false)
         return MyDimesionClass(binding)
 
     }
 
-    override fun onBindViewHolder(holder: DimensionAdapter.MyDimesionClass, position: Int) {
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: MyDimesionClass, position: Int) {
         val item = list[position]
 
         val width = item.width
@@ -68,6 +69,7 @@ class DimensionAdapter(
         return list.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun clearSelection() {
         selectedTags.clear()
         checkedStates.clear()
@@ -76,7 +78,7 @@ class DimensionAdapter(
         onCheckBoxStateChanged(false, 0) // Notify that all are unchecked
     }
 
-    fun getSelectedUrl() : MutableSet<String?> {
-        return selectedTags
+    fun getSelectedUrl(): Set<String?> {
+        return selectedTags.toSet() // ✅ SAFE COPY
     }
 }

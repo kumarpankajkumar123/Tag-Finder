@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "792793203406",
+    "project_id": "taginfofinderpankaj",
+    "storage_bucket": "taginfofinderpankaj.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:792793203406:android:d57cc91e232748da7ec69f",
+        "android_client_info": {
+          "package_name": "com.example.tagfinderapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV4IMbwV6KDxPuGrG_Qbpj4P26kgletRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

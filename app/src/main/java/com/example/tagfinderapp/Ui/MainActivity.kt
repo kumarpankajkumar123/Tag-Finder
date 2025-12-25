@@ -20,8 +20,12 @@ import com.example.tagfinderapp.Util.NetworkMonitor
 import com.example.tagfinderapp.Util.ProgressDialog
 import com.example.tagfinderapp.base.BaseActivity
 import com.example.tagfinderapp.databinding.ActivityMainBinding
+import com.google.android.gms.ads.MobileAds
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity(), OnClickListener {
+class MainActivity : BaseActivity(), OnClickListener {
     private lateinit var navController: NavController
     lateinit var binding: ActivityMainBinding
     private lateinit var networkMonitor: NetworkMonitor
@@ -61,14 +65,17 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding.more.setOnClickListener(this)
         setupDestinationListener()
 
-        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+       /* val insetsController = WindowCompat.getInsetsController(window, window.decorView)
         insetsController.isAppearanceLightStatusBars = false
         insetsController.isAppearanceLightNavigationBars = false
         window.isNavigationBarContrastEnforced = false
 
+        ProgressDialog.setStatusBarColor(window, ContextCompat.getColor(this, R.color.purple_700))*/
 
-        ProgressDialog.setStatusBarColor(window, ContextCompat.getColor(this, R.color.purple_700))
-
+        CoroutineScope(Dispatchers.IO).launch {
+            // Initialize the Google Mobile Ads SDK on a background thread.
+            MobileAds.initialize(this@MainActivity) {}
+        }
     }
 
     private fun setupDestinationListener() {

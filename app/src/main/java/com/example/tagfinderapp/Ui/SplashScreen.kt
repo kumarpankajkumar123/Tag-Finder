@@ -8,13 +8,13 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tagfinderapp.ViewModal.TagsViewModel
+import com.example.tagfinderapp.base.BaseActivity
 import com.example.tagfinderapp.databinding.ActivitySplashScreenBinding
 
 
-class SplashScreen : AppCompatActivity() {
+class SplashScreen : BaseActivity() {
 
-    lateinit var binding : ActivitySplashScreenBinding
-    private lateinit var tagsViewModel : TagsViewModel
+    lateinit var binding: ActivitySplashScreenBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
@@ -29,7 +29,12 @@ class SplashScreen : AppCompatActivity() {
         imageAnimator.setDuration(1000)
 
         val textAnimator =
-            ObjectAnimator.ofFloat(binding.textview, "translationY", -500f, 500f) // Adjust similarly
+            ObjectAnimator.ofFloat(
+                binding.textview,
+                "translationY",
+                -500f,
+                500f
+            ) // Adjust similarly
         textAnimator.setDuration(1000)
 
         val animatorSet = AnimatorSet()

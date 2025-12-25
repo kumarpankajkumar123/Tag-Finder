@@ -19,4 +19,6 @@
     <color name="gray2">#5DCAC8CA</color>
     <color name="selected_tab_color">#ff0000</color>
     <color name="unselected_tab_color">#000000</color>
+    <color name="status_color">#ff0000</color>
+    <color name="naviagtion_color">#F0F8FF</color>
 </resources>

@@ -8,12 +8,18 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowInsets
 import com.example.tagfinderapp.R
+import androidx.core.graphics.drawable.toDrawable
 
 object ProgressDialog {
 
     private var dialog: Dialog? = null
 
     fun show(context: Context) {
+
+        if (context !is android.app.Activity || context.isFinishing || context.isDestroyed) {
+            return
+        }
+
         if (dialog?.isShowing == true) return
 
         dialog = Dialog(context)
@@ -22,7 +28,7 @@ object ProgressDialog {
             setContentView(R.layout.progress_dialog) // your loader layout
             setCancelable(false)
 
-            window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+            window?.setBackgroundDrawable(android.graphics.Color.TRANSPARENT.toDrawable())
             window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -31,9 +37,17 @@ object ProgressDialog {
         }
     }
 
+
     fun dismiss() {
-        dialog?.dismiss()
-        dialog = null
+        try {
+            if (dialog != null && dialog!!.isShowing) {
+                dialog!!.dismiss()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            dialog = null
+        }
     }
 
     fun setStatusBarColor(window: Window, color: Int) {

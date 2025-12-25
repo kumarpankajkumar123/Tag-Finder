@@ -3,6 +3,9 @@ import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -20,7 +23,8 @@ android {
     }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -35,11 +39,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
-
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -47,6 +46,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.espresso.core)
+    implementation(libs.firebase.crashlytics)
     val lifecycle_version = "2.8.7"
     val arch_version = "2.2.0"
     
@@ -99,4 +99,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:5.0.5")
 
     implementation("com.tbuonomo:dotsindicator:5.1.0")
+
+    implementation("com.google.android.gms:play-services-ads:24.8.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0")
 }

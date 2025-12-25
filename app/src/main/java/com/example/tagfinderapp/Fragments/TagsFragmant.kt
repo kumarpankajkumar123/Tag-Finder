@@ -83,8 +83,24 @@ class TagsFragmant : Fragment() {
             findNavController().navigateUp()
         }
 
-    }
+        tagviewmodel.tags.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                is ApiHandler.Loading -> {
+                    ProgressDialog.show(requireContext())
+                }
+                is ApiHandler.Success -> {
+                    ProgressDialog.dismiss()
+                    val res = status.data
+                    processdatatag(res)
+                }
 
+                is ApiHandler.Failure -> {
+                    ProgressDialog.dismiss()
+                }
+            }
+        }
+
+    }
     private fun processdatatag(it: VideoModel) {
 
         UserDatabase.saveVideo(it.items.firstOrNull()?.id?:"", it.items.firstOrNull()?.snippet?.thumbnails?.high?.url?:"",it.items.firstOrNull()?.snippet?.description?:"")
@@ -165,29 +181,10 @@ class TagsFragmant : Fragment() {
     fun load_data(videoId: String) {
         Log.e("load_data", "call hua")
 
-        lifecycleScope.launch {
             tagviewmodel.getData(
                 AppConst.snippet,
                 videoId,
                 AppConst.Api_Key
             )
-            tagviewmodel.tags.observe(viewLifecycleOwner) { status ->
-                when (status) {
-
-                    is ApiHandler.Loading -> {
-                        ProgressDialog.show(requireContext())
-                    }
-                    is ApiHandler.Success -> {
-                        ProgressDialog.dismiss()
-                        val res = status.data
-                        processdatatag(res)
-                    }
-
-                    is ApiHandler.Failure -> {
-                        ProgressDialog.dismiss()
-                    }
-                }
-            }
-        }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.tagfinderapp.Fragments
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,17 +11,13 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import com.example.tagfinderapp.Adaptor.HomeOffersAdapter
 import com.example.tagfinderapp.Adaptor.TodayVideoAdaptor
-import com.example.tagfinderapp.Model.ImageModel
 import com.example.tagfinderapp.Model.TodayVideo
 import com.example.tagfinderapp.Network.ApiHandler
 import com.example.tagfinderapp.Network.RetrofitInstanse
@@ -35,21 +30,47 @@ import com.example.tagfinderapp.ViewModal.VideoViewModel
 import com.example.tagfinderapp.ViewModal.VideoViewModelFactory
 import com.example.tagfinderapp.appConst.AppConst
 import com.example.tagfinderapp.databinding.FragmentVideoDetailBinding
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
+import androidx.core.net.toUri
+import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 
 
 class VideoDetail : Fragment(), OnClickListener {
 
     lateinit var recycler: RecyclerView
     lateinit var binding: FragmentVideoDetailBinding
+    private lateinit var todayAdapter: TodayVideoAdaptor
+
     private lateinit var mainViewModel: VideoViewModel
     private var snapHelper: LinearSnapHelper? = null
+    private val interstitialTestUnitId = AppConst.interstialTextId
+    private var interstitialAd: InterstitialAd? = null
+    private var decorationAdded = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            // Initialize the Google Mobile Ads SDK on a background thread.
+            MobileAds.initialize(requireContext()) {}
+        }
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         binding = FragmentVideoDetailBinding.inflate(layoutInflater, container, false)
@@ -67,8 +88,61 @@ class VideoDetail : Fragment(), OnClickListener {
         UserDatabase.init(requireContext())
         snapHelper = LinearSnapHelper()
 
-//        refreshData()
+        binding.swipeRefresh.setOnRefreshListener {
+            mainViewModel.getTodayVideo(
+                AppConst.snippet,
+                AppConst.chart,
+                AppConst.Api_Key,
+                AppConst.regionCode,
+                AppConst.maxResult
+            )
+        }
 
+        mainViewModel._todayVideo.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                is ApiHandler.Loading -> ProgressDialog.show(requireContext())
+                is ApiHandler.Success -> {
+                    ProgressDialog.dismiss()
+                    binding.swipeRefresh.isRefreshing = false
+                    val response = status.data
+                    processdata(response)
+                }
+                is ApiHandler.Failure -> {
+                    binding.swipeRefresh.isRefreshing = false
+                    ProgressDialog.dismiss()
+                }
+            }
+        }
+
+        ApiCall()
+
+        binding.searchBtn.setOnClickListener(this)
+        binding.gotoYoutube.setOnClickListener(this)
+        binding.watchTutorial.setOnClickListener(this)
+
+        binding.searchEditText.addTextChangedListener {
+            if (binding.errorText.isVisible) {
+                binding.errorText.visibility = View.GONE
+            }
+        }
+
+
+        val adView = AdView(requireContext())
+        adView.adUnitId = AppConst.BannerUnitId
+        adView.setAdSize(
+            AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+                requireContext(), 360
+            )
+        )
+        binding.adViewContainer.removeAllViews()
+        binding.adViewContainer.addView(adView)
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+
+        loadInterstitial()
+    }
+
+    private fun ApiCall(){
         mainViewModel.getTodayVideo(
             AppConst.snippet,
             AppConst.chart,
@@ -76,76 +150,141 @@ class VideoDetail : Fragment(), OnClickListener {
             AppConst.regionCode,
             AppConst.maxResult
         )
+    }
 
-        mainViewModel._todayVideo.observe(viewLifecycleOwner) { status ->
-            when (status) {
-                is ApiHandler.Loading -> ProgressDialog.show(requireContext())
+    private fun loadInterstitial() {
+        val adRequest = AdRequest.Builder().build()
+        InterstitialAd.load(
+            requireContext(),
+            interstitialTestUnitId,
+            adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    Log.d("AdMob", "Interstitial loaded")
+                    interstitialAd = ad
+                    // Set full screen content callback to know when user closes ad
+                    interstitialAd?.fullScreenContentCallback =
+                        object : FullScreenContentCallback() {
+                            override fun onAdDismissedFullScreenContent() {
+                                Log.d("AdMob", "Interstitial dismissed")
+                                // After ad dismissed we can navigate if navigation was pending
+                                performNavigationIfPending()
+                                // Optionally preload next interstitial
+                                interstitialAd = null
+                                loadInterstitial()
+                            }
 
-                is ApiHandler.Success -> {
-                    ProgressDialog.dismiss()
-                    val response = status.data
-                    processdata(response)
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                Log.w("AdMob", "Failed to show interstitial: $adError")
+                                interstitialAd = null
+                                performNavigationIfPending()
+                            }
+
+                            override fun onAdShowedFullScreenContent() {
+                                Log.d("AdMob", "Interstitial showed")
+                            }
+                        }
                 }
 
-                is ApiHandler.Failure -> {
-                    ProgressDialog.dismiss()
-                    Toast.makeText(requireContext(), "no data found", Toast.LENGTH_SHORT).show()
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    Log.w("AdMob", "Interstitial failed to load: ${loadAdError.message}")
+                    interstitialAd = null
                 }
             }
+        )
+    }
+
+    private var pendingNavigationBundle: Bundle? = null
+    private fun performNavigationIfPending() {
+        pendingNavigationBundle?.let { bundle ->
+            // navigate and clear pending
+            findNavController().navigate(
+                R.id.videoFragment_to_tagsFragment,
+                bundle
+            )
+            pendingNavigationBundle = null
         }
-
-
-        binding.searchbtn.setOnClickListener(this)
-        binding.gotoYoutube.setOnClickListener(this)
-        binding.watchTutorial.setOnClickListener(this)
     }
 
     fun processdata(data: TodayVideo) {
 
-        Log.e("tittle", ":=" + data.items.get(0).snippet.title)
+        if(data.items.isNotEmpty()){
+            binding.noData.isVisible = false
+            binding.hrRecycler.isVisible = true
+            recycler = binding.hrRecycler
 
-        recycler = binding.hrRecycler
-        recycler.setHasFixedSize(true)
-        recycler.itemAnimator = null
-        recycler.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        recycler.adapter = TodayVideoAdaptor(requireContext(), data) { videoId ->
-            navigateToSubtagsFragment(videoId)
+            if (recycler.layoutManager == null) {
+                recycler.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            }
+
+            if (!::todayAdapter.isInitialized) {
+                recycler.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+                todayAdapter = TodayVideoAdaptor(requireContext(), data) { videoId ->
+                    navigateToSubtagsFragment(videoId)
+                }
+
+                recycler.adapter = todayAdapter
+                attachSnapHelper(recycler)
+            } else {
+                todayAdapter.updateData(data)
+                recycler.adapter = todayAdapter
+            }
+            if (!decorationAdded) {
+                recycler.addItemDecoration(HorizontalSpacingItemDecoration(50))
+                decorationAdded = true
+            }
         }
-        recycler.addItemDecoration(HorizontalSpacingItemDecoration(50))
-        attachSnapHelper(recycler)
+        else{
+            binding.noData.isVisible = true
+            binding.hrRecycler.isVisible = false
+        }
+
+
     }
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            binding.searchbtn.id -> {
-                val getvalue = binding.searchEditText.text.toString()
+            binding.searchBtn.id -> {
+                val value = binding.searchEditText.text.toString().trim()
 
-                if (getvalue.isEmpty()) {
-                    Toast.makeText(requireContext(), "please enter video url", Toast.LENGTH_SHORT)
-                        .show()
-                } else if (IsValidUrl(getvalue)) {
-                    val bundle = Bundle()
-                    bundle.putString("video_url", getvalue) // Pass the string
+                when {
+                    value.isEmpty() -> {
+                        binding.errorText.text = getString(R.string.please_enter_the_url)
+                        binding.errorText.visibility = View.VISIBLE
+                    }
 
-                    findNavController().navigate(R.id.videoFragment_to_tagsFragment, bundle)
-                    Log.d("FragmentNavigation", "VideoDetail Fragment: Navigated to TagFragment")
+                    !IsValidUrl(value) -> {
+                        binding.errorText.text = getString(R.string.please_enter_the_valid_url)
+                        binding.errorText.visibility = View.VISIBLE
+                    }
 
+                    else -> {
+                        binding.errorText.visibility = View.GONE
 
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "please enter correct video url",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        val bundle = Bundle().apply {
+                            putString("video_url", value)
+                        }
+
+                        findNavController().navigate(
+                            R.id.videoFragment_to_tagsFragment,
+                            bundle
+                        )
+                        Log.d(
+                            "FragmentNavigation",
+                            "VideoDetail Fragment: Navigated to TagFragment"
+                        )
+                    }
                 }
             }
 
             binding.gotoYoutube.id -> {
                 // Open the YouTube app or URL
                 val intent = Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse("https://www.youtube.com") // YouTube URL
-                    `package` = "com.google.android.youtube" // Open in YouTube app if available
+                    data = AppConst.youtube.toUri() // YouTube URL
+                    `package` = AppConst.youtube_pakage // Open in YouTube app if available
                 }
 
                 // Check if the YouTube app is available
@@ -154,7 +293,7 @@ class VideoDetail : Fragment(), OnClickListener {
                 } else {
                     // Fallback to opening in a browser
                     val browserIntent =
-                        Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com"))
+                        Intent(Intent.ACTION_VIEW, AppConst.youtube.toUri())
                     startActivity(browserIntent)
                 }
             }
@@ -171,12 +310,10 @@ class VideoDetail : Fragment(), OnClickListener {
         if (TextUtils.isEmpty(url)) {
             return false
         }
-
         // Check if there are spaces or multiple URLs (we allow only one URL)
         if (url.contains(" ") || url.contains(",")) {
             return false
         }
-
         // Check if the URL is a valid web URL
         if (!Patterns.WEB_URL.matcher(url).matches()) {
             return false
@@ -187,7 +324,6 @@ class VideoDetail : Fragment(), OnClickListener {
         //Pattern pattern = Pattern.compile(YOUTUBE_URL_PATTERNNEW);
         return pattern.matcher(url).matches()
     }
-
 
 
     fun attachSnapHelper(recyclerView: RecyclerView) {
@@ -207,14 +343,31 @@ class VideoDetail : Fragment(), OnClickListener {
         bundle.putString("todayVideoId", videoId)
         Log.d("videoId", "navigateToSubtagsFragment: ${videoId}")
 
+        if (interstitialAd != null) {
+            // set pending navigation so it happens after ad dismissed
+            pendingNavigationBundle = bundle
+            interstitialAd?.show(requireActivity())
+        } else {
+            val navController = findNavController()
+            navController.navigate(R.id.videoFragment_to_tagsFragment, bundle)
 
-        val navController = findNavController()
-        navController.navigate(R.id.videoFragment_to_tagsFragment, bundle)
+            loadInterstitial()
+        }
+
     }
 
     override fun onResume() {
         super.onResume()
         binding.searchEditText.text?.clear()
+        if (::todayAdapter.isInitialized) {
+            todayAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        ProgressDialog.dismiss()
+        binding.hrRecycler.adapter = null
     }
 }
 

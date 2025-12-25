@@ -29,9 +29,9 @@ class AppTutorialFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val imageList = listOf(
-            ImageModel(R.drawable.first, "Open Any Youtube Video Whose tags you want to find."),
-            ImageModel(R.drawable.second, "Click on Share Button & Copy link"),
-            ImageModel(R.drawable.third, "Paste in App Search Box and Get Tags Of the Video")
+            ImageModel(R.drawable.apptuto_1, "Open Any Youtube Video Whose tags you want to find."),
+            ImageModel(R.drawable.apptuto_2, "Click on Share Button & Copy link"),
+            ImageModel(R.drawable.apptuto_3, "Paste in App Search Box and Get Tags Of the Video")
         )
 
         val adapter1 = HomeOffersAdapter(requireContext(), imageList)

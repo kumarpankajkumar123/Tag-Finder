@@ -75,7 +75,7 @@ class DataKeyWords(val keyword: String) : Fragment() {
             clearAllCheckboxes()
         }
 
-        binding.searchbtn.setOnClickListener {
+        binding.searchBtn.setOnClickListener {
             copySelectedTags()
         }
 

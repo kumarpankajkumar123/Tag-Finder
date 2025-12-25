@@ -109,7 +109,7 @@ class Thumbnail(val todayModel: VideoModel) : Fragment() {
         }
 
         binding.downloadImage.setOnClickListener {
-            val urls = adapter.getSelectedUrl()
+            val urls = adapter.getSelectedUrl().toList()
 
             if (urls.isEmpty()) {
                 return@setOnClickListener
@@ -120,8 +120,8 @@ class Thumbnail(val todayModel: VideoModel) : Fragment() {
                     downloadImage(url)
                 }
             }
+            adapter.clearSelection() // ✅ loop ke baad
         }
-
     }
 
     fun clearAllCheckboxes() {
@@ -146,11 +146,10 @@ class Thumbnail(val todayModel: VideoModel) : Fragment() {
             val dm = requireContext()
                 .getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             dm.enqueue(request)
-            adapter.clearSelection()
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(requireContext(), "Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            adapter.clearSelection()
+
         }
     }
 

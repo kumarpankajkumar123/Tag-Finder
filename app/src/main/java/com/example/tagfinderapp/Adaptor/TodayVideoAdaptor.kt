@@ -2,6 +2,7 @@ package com.example.tagfinderapp.Adaptor
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -70,5 +71,10 @@ class TodayVideoAdaptor(
         animatorSet.playSequentially(moveToCenter)
         animatorSet.duration = 800 // Total duration (adjust as needed)
         animatorSet.start()
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newData: TodayVideo) {
+        this.todayVideo = newData
+        notifyDataSetChanged()
     }
 }

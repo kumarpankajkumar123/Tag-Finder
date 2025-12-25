@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:visibility="gone"
-                android:background="@drawable/searchdrawable"
+                android:background="@drawable/search_drawable"
                 android:elevation="3dp"
                 android:orientation="vertical">
                     <androidx.appcompat.widget.AppCompatTextView
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:visibility="gone"
-                android:background="@drawable/searchdrawable"
+                android:background="@drawable/search_drawable"
                 android:elevation="3dp"
                 android:orientation="vertical">
 
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:visibility="gone"
-                android:background="@drawable/searchdrawable"
+                android:background="@drawable/search_drawable"
                 android:elevation="3dp"
                 android:orientation="vertical">
 

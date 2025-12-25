@@ -50,7 +50,7 @@ class SubTags(val todayModel: VideoModel) : Fragment() {
             clearAllCheckboxes()
         }
 
-        binding.searchbtn.setOnClickListener {
+        binding.searchBtn.setOnClickListener {
             copySelectedTags()
         }
 

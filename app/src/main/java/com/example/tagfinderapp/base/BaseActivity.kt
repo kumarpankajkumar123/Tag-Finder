@@ -17,19 +17,21 @@ open class BaseActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge(window)
-        val windowInsetsController = ViewCompat.getWindowInsetsController(window.decorView)
-        windowInsetsController?.isAppearanceLightNavigationBars = true
-        windowInsetsController?.isAppearanceLightStatusBars = true
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val statusBarColor = ContextCompat.getColor(this, R.color.status_color) // your color
+        val navigationBarColor = ContextCompat.getColor(this, R.color.naviagtion_color) // your color
+
+        val windowInsetsController = WindowCompat.getInsetsController(window,window.decorView)
+        windowInsetsController?.isAppearanceLightNavigationBars = false
+        windowInsetsController?.isAppearanceLightStatusBars = false
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             // Android 15+
             window.decorView.setOnApplyWindowInsetsListener { view, insets ->
                 val statusBarInsets = insets.getInsets(WindowInsets.Type.statusBars())
                 val navBarInsets = insets.getInsets(WindowInsets.Type.navigationBars())
-               /* view.setBackgroundColor(getColor(R.color.purple_700))         // Adjust padding to avoid overlap*/
-                WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars = true
-
+               view.setBackgroundColor(getColor(R.color.purple_700))
                 view.setPadding(0, statusBarInsets.top, 0, navBarInsets.bottom)
                 insets
             }
@@ -38,11 +40,11 @@ open class BaseActivity: AppCompatActivity() {
             WindowCompat.setDecorFitsSystemWindows(window, false) // Let content draw under system bars
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
                 val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars = false
+                window.statusBarColor = statusBarColor
+                window.navigationBarColor = navigationBarColor
                 view.setPadding(0, systemInsets.top, 0, systemInsets.bottom)
                 insets
             }
-            window.statusBarColor = ContextCompat.getColor(this, R.color.purple_700)
         }
     }
 }

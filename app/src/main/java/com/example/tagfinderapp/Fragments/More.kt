@@ -15,19 +15,18 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.example.tagfinderapp.R
-import com.example.tagfinderapp.Util.ApkSharingHelper
+import com.example.tagfinderapp.appConst.AppConst
 import com.example.tagfinderapp.databinding.FragmentMoreBinding
 import com.google.android.material.button.MaterialButton
 import java.io.File
 
 
 class More : Fragment(), OnClickListener {
-
-    private val apkSharingHelper = ApkSharingHelper(this)
 
     lateinit var binding: FragmentMoreBinding
     override fun onCreateView(
@@ -43,7 +42,7 @@ class More : Fragment(), OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         binding.instagram.setOnClickListener(this)
-        binding.facebook.setOnClickListener(this)
+        binding.linkedin.setOnClickListener(this)
         binding.ytube.setOnClickListener(this)
         binding.contact.setOnClickListener(this)
         binding.ShareApp.setOnClickListener(this)
@@ -56,11 +55,11 @@ class More : Fragment(), OnClickListener {
     override fun onClick(view: View?) {
         when (view?.id) {
             binding.instagram.id -> {
-                openUrl("https://www.instagram.com/er_pankaj_kumarr/")
+                openUrl(AppConst.instagram)
             }
 
-            binding.facebook.id -> {
-                openUrl("https://www.linkedin.com/in/pankaj-kumar-a5a827224/")
+            binding.linkedin.id -> {
+                openUrl(AppConst.linkedin)
             }
 
             binding.contact.id -> {
@@ -68,12 +67,7 @@ class More : Fragment(), OnClickListener {
             }
 
             binding.ShareApp.id -> {
-//                Log.e("share methods", "call hua")
-//                apkSharingHelper.shareApk(
-//                    packageName = requireContext().packageName,
-//                    authority = "com.example.tagfinderapp.fileprovider"
-//                )
-                shareApk()
+                /*shareApk()*/
             }
 
             binding.question.id -> {
@@ -157,17 +151,27 @@ class More : Fragment(), OnClickListener {
             val dialog = android.app.Dialog(requireContext())
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(dialogView)
-            dialog.window?.setLayout(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT
-            )
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            val btn = dialogView.findViewById<MaterialButton>(R.id.watchTutorial1)
+            dialog.show()
+
+            val sideMarginDp = 30
+            val density = requireContext().resources.displayMetrics.density
+            val sideMarginPx = (sideMarginDp * density).toInt()
+
+
+            val window = dialog.window ?: return
+            val params = window.attributes
+            val screenWidth = resources.displayMetrics.widthPixels
+            params.width = screenWidth - 2 * sideMarginPx   // real horizontal space
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT
+            window.attributes = params
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            val btn = dialogView.findViewById<TextView>(R.id.watchTutorial1)
             btn.setOnClickListener {
                 try {
                     val intent = Intent(
                         Intent.ACTION_SENDTO, Uri.fromParts(
-                            "mailto", "pankajkm347@gmail.com", null
+                            "mailto", "pankajtech347@gmail.com", null
                         )
                     )
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Tag#Finder is not working")
@@ -181,19 +185,12 @@ class More : Fragment(), OnClickListener {
                     Toast.makeText(requireContext(), "not sending email", Toast.LENGTH_SHORT).show()
                 }
             }
-            dialog.show()
+
         } else if (q.equals("policy")) {
-            val dialogView =
-                LayoutInflater.from(requireContext()).inflate(R.layout.privacypolicy, null)
-            val dialog = android.app.Dialog(requireContext())
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(dialogView)
-            dialog.window?.setLayout(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT
-            )
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.show()
+            val url = AppConst.privacy_policy
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+
         } else {
             val dialogView =
                 LayoutInflater.from(requireContext()).inflate(R.layout.rateapp, null)
@@ -206,7 +203,7 @@ class More : Fragment(), OnClickListener {
             )
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-            val btn = dialogView.findViewById<MaterialButton>(R.id.searchbtn)
+            val btn = dialogView.findViewById<MaterialButton>(R.id.search_btn)
             btn.setOnClickListener {
                 val rating = dialogView.findViewById<EditText>(R.id.search_edit_text1)
                 val stringrating: String = rating.text?.toString()?.trim().toString()

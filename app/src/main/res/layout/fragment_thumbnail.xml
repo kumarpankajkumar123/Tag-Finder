@@ -72,11 +72,11 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cancelall"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/_30dp"
             android:layout_height="@dimen/_30dp"
             android:src="@drawable/baseline_cancel_24"
             android:visibility="visible"
-            app:layout_constraintEnd_toStartOf="@+id/cancelall"
+            app:layout_constraintEnd_toStartOf="@+id/count"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -84,7 +84,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/count"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             tools:text="1"
             android:visibility="gone"
             android:fontFamily="@font/robotoflex"
@@ -102,8 +102,8 @@
             android:layout_height="@dimen/_30dp"
             android:src="@drawable/downloadimg"
             android:visibility="visible"
-            app:layout_constraintStart_toEndOf="@+id/count"
             android:tint="@color/purple_700"
+            app:layout_constraintStart_toEndOf="@+id/count"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
